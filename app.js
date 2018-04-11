@@ -1,15 +1,31 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+const express = require('express');
+const path = require('path');
+const favicon = require('serve-favicon');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const session = require('express-session');
+const expressValidator = require('express-validator');
+const passport = require('passport');
+const flash = require('connect-flash');
+const mongoose = require('mongoose');
+const mongoDB = process.env.databasee;
+const MongoDBStore = require('connect-mongodb-session')(session);
+const compression = require('compression');
+mongoose.connect(mongoDB);
+db = mongoose.connection;
+//bind connecton to error event(to get notification of connection errors)
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
-var index = require('./routes/index');
-var users = require('./routes/users');
+const index = require('./routes/index');
 
-var app = express();
+const app = express();
+// Set security headers
+const helmet = require('helmet');
 
+app.use(compression()); //Compress all routes. // I don't understand the part of the documentation about server-sent events
+
+app.use(helmet())
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -20,10 +36,28 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(expressValidator());
+app.use(require('express-session')({
+    secret: 'supersecretecatkeyguyfalsetrue',
+    resave: false,
+    saveUninitialized: false,
+    cookie:{maxAge: 2 * 24 * 60 * 60 * 1000},
+    store: new MongoDBStore({
+        uri: process.env.database,
+        databaseName: 'portal',
+        collection: 'sessions'
+      })
+}));
+app.use(flash());
+app.use(function(req,res,next){
+  res.locals.messages = require('express-messages')(req,res);
+  next();
+})
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
-app.use('/users', users);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

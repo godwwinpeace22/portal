@@ -1,0 +1,38 @@
+extends layout
+block content
+	.dashboard.col-sm-12
+		.profile.col-sm-3
+			if(user.memberRef === null)
+				.img(style='background-image:url(/images/avarter.png)')
+			else
+				.img(style='background-image:url(' + user.memberRef.imgSrc +')')
+			h3(style='text-transform:capitalize') #{user.name}
+			p #{user.email}
+			if(user.memberRef !== null)
+				p #{user.memberRef.regNo}
+			hr
+			if(user.memberRef === null)
+				p Registration status:  
+					span(style='color:red')
+						i.fas.fa-ban   
+						span   Not Registered
+			else
+				p Registration Status:
+					span(style='color:green')  
+						i.far.fa-check-circle
+						span  Registered
+		.about.col-sm-9
+			.tabs
+				ul.list-inline
+					if(user.memberRef === null)
+						li
+							a(href="/register") Register
+					li
+						a(href="/update") Update Profile
+					li
+						a(href="/print") Print form
+					li
+						a(href="/logout") Logout
+				hr
+			block dashboard
+				

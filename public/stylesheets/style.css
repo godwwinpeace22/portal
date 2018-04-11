@@ -1,8 +1,129 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+body{
+  font-family: 'Titillium Web', sans-serif;
+}
+.panel img{
+  width:100px;
+  height: 300px;
+}
+.navbar{
+  position: relative;
+  margin-bottom:10px;
+  background-color:#fff;
+  padding:10px 0px;
+}
+.navbar a{
+  font-family: 'Nunito', sans-serif;
+  font-weight: bolder;
+  text-transform: uppercase;
+  letter-spacing: .11em;
+}
+.navbar a:hover{text-decoration: none;}
+ul.success li, ul.info li, ul.error li{
+  margin:20px 0px;
+  padding:15px;
+  border:1px solid transparent;
+  border-radius:4px;
+  list-style:none;
+}
+ul.success li{
+  color:#3c763d;
+  background-color:#dff0d8;
+}
+ul.info li{
+  color:#31708f;
+  background-color:#d9edf7;
+}
+ul.error li{
+  color:#a94442;
+  background-color:#f2dede;
+}
+.dropdown-menu hr{
+  margin-top:5px;
+  margin-bottom: 5px;
+}
+.dropdown img{
+  width:20px;
+  height:20px;
+  border-radius: 4px;
+  -webkit-border-radius:4px;
+  -moz-border-radius:4px;
+  -o-border-radius:4px;
+}
+.home{
+  margin-top:px;
+  padding-left:0px;
+  padding-right: 0px;
+  position: relative;
+}
+.home .main{
+  padding-left:0px;
+  padding-right: px;
+  background: thistl;
+}
+.home .sidebar{
+  background-color: sienn;
+}
+.home .sidebar .thumbnl{
+  width:50px;height:50px;background-color:red;display:inline-block;
+}
+.home .sidebar .thumbnl img{
+  width:100%;height:50px;display:block;
+}
+.home .sidebar .thumb-txt{
+  width:230px;max-height:50px;background:rgb(250, 250, 249);display:inline-block;overflow: hidden;
+}
+.content>h1,.content>hr{
+  display:none;
 }
 
-a {
-  color: #00B7FF;
+.dashboard{
+  background-color:ta;
+  padding-left:0px;
+  padding-right: 0px;
+}
+.dashboard .profile{
+  background-color: seashell;
+  min-height:100px;
+  padding-top:10px;
+}
+.dashboard .profile .img{
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height:200px;
+  border-radius: 4px;
+}
+.dashboard .profile img{
+  width:100%;
+  height:200px;
+  display:block;
+  border-radius:4px;
+}
+.dashboard .about{
+  background-color:azur;
+  min-height:100px;
+}
+
+.tabs ul li{
+  background:gree;
+  margin-right:10px;
+  padding:5px;
+}
+.tabs ul li a{
+  padding:5px;
+  color:#586069;
+}
+.tabs hr{margin-top:0px;}
+.wel{
+  border:1px solid #d8d0d0;
+  border-radius: 4px;
+  padding:15px;
+}
+.footer{
+  padding:20px;
+  background-color:#31708f;
+  color:#f3f1f1;
+  border-bottom:3px solid #a94442;
+  position: relative;
+  bottom:0px;
 }

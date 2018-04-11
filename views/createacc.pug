@@ -1,0 +1,29 @@
+extends layout
+block content
+	.register.col-md-6.col-md-offset-3(style='padding-bottom:38px;color:#999;')
+		h1 #{title}
+		if msg
+			ul
+			li!= msg
+		if errors
+			ul
+			for error in errors
+				li!= error.msg
+		form(method='POST', action='')
+			.form-group
+				label Name
+				input.form-control(name='name', type='text', placeholder='Enter name', required)
+			.form-group
+				label Username
+				input.form-control(name='username', type='text', placeholder='Enter username', required)
+			.form-group
+				label Email
+				input.form-control(name='email', type='email', placeholder='Enter email', required)
+			.form-group
+				label Password
+				input.form-control(name='password', type='password', placeholder='Enter password', required)
+			.form-group
+				label Confirm Password
+				input.form-control(name='password2', type='password', placeholder='Confirm password', required)
+			.form-group
+				input.btn.btn-primary(name='register', type='submit')

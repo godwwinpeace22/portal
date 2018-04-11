@@ -1,7 +1,48 @@
 doctype html
-html
-  head
-    title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
-  body
-    block content
+html(lang="en")
+	head
+		meta(charset='utf-8')
+		meta(http-equiv='x-ua-compatible', content='ie=edge')
+		meta(name='viewport', content='width=device-width, initial-scale=1')
+		meta(name='description', content='Portal app')
+		meta(name='author', content='GodwinGabriel')
+		link(rel='apple-touch-icon', href='favicons.png')
+		link(rel='author', href='')
+		link(rel='publisher', href='')
+		meta(itemprop='image', content='')
+		title= title
+		link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous")
+		link(rel='stylesheet', href='/stylesheets/style.css')
+		link(href="https://fonts.googleapis.com/css?family=Nunito:200,300,400,600|Lobster|Titillium+Web" rel="stylesheet")
+		script(src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous")
+	body
+		nav.navbar.navbar-default.navbar-fixed-top
+			.container
+				.navbar-header
+					button.navbar-toggle(type='button', data-toggle='collapse', data-target='#navbar', aria-expanded='false', aria-controls='navbar')
+						span.sr-only Toggle navigation
+						span.icon-bar
+						span.icon-bar
+						span.icon-bar
+					
+				#navbar.collapse.navbar-collapse
+					ul.nav.navbar-nav.navbar-left
+						a(href="/")
+							img(src="/images/rccg.png", alt="logo" style='width:80px;height:80px;float:left;margin-right:5px;')
+							h4 The Redeemed Christian Church Of God
+							h4 Ebonyi Province1 Youth
+						
+		.content.col-sm-10.col-sm-offset-1
+			p!= messages()
+			block content
+		footer.footer.col-sm-12
+			p.text-center Copyright &copy 2018 RCCG Ebonyi Youth. All rights reserved.
+		script(defer src="https://use.fontawesome.com/releases/v5.0.4/js/all.js")
+		script(src='/javascripts/jquery-3.2.0.js')
+		//script(src='/javascripts/bootstrap.js')
+		script(src='/javascripts/index.js')
+		script.
+			var height1 = $('.navbar').outerHeight()
+			var height2 = $('.footer').outerHeight()
+			var height3 = $(window).height()
+			$('.content').css({minHeight:height3 - height2 - height1})

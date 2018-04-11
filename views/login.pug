@@ -1,0 +1,17 @@
+extends layout
+block content
+	.login.col-sm-6.col-sm-offset-3(style='height:500p;')
+		h3(style='color:#999;') Please Login
+		if err
+			p.alert.alert-danger=err
+		form(method='POST', action='/login')
+			.form-group
+				input.form-control(name='username', type='text', placeholder='username', required)
+			.form-group
+				input.form-control(name='password', type='password', placeholder='password', required)
+			.form-group
+				input.btn.btn-primary(name='login', type='submit', value='Login')
+			a(href="/new") Or Create Account
+	script(src='/javascripts/jquery-3.2.0.js')
+	script.
+		-$('.login').css({height:$(window).height()-153 + 'px'});

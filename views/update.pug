@@ -1,0 +1,53 @@
+extends dashboard
+block dashboard
+	.register.col-md-12(style='padding-bottom:38px;color:#999;')
+		h1 #{title}
+		form(method='POST', action='')
+			if errors
+				ul
+				for error in errors
+					li!= error.msg
+			if(messages)
+				.message.info
+				span= messages.info
+			.form-group
+				label Name
+				input.form-control(name='name', type='text', value=user.name disabled)
+			.form-group
+				label Email
+				input.form-control(name='email', type='email', value=user.email disabled)
+			.form-group
+				label Parish
+				select.form-control(name='parish', type='text', required)
+					option(value='' disabled selected) Select parish
+					option(value='faith-tabarnacle') faith tabarnacle
+					option(value='goshen') goshen
+					option(value='lighthouse') lighthouse
+					option(value='ressurection') resurrection
+					option(value='firstborn') firstborn
+			.form-group
+				label Zone
+				select.form-control(name='zone', type='text' required)
+					option(value='' disabled selected) Select Zone
+					option(value='faith-tabarnaclez') faith tabarnacleZ
+					option(value='goshenz') goshenZ
+					option(value='lighthousez') lighthouseZ
+					option(value='ressurectionz') resurrectionZ
+					option(value='firstbornz') firstbornZ
+			.form-group
+				label Area
+				select.form-control(name='area', type='text', required)
+					option(value='' disabled selected) Select Area
+					option(value='faith-tabarnacleA') faith tabarnacleA
+					option(value='goshenA') goshenA
+					option(value='lighthouseA') lighthouseA
+					option(value='ressurectionA') resurrection
+					option(value='firstbornA') firstbornA
+			.form-group
+				label Interest
+				select.form-control(name='interest', type='text', required)
+					option(value='' disabled selected) Select Interest
+					option(value='fishery') Fishery
+					option(value='ict') ICT
+			.form-group
+				input.btn.btn-primary(name='update', type='submit' value='Update Profile')
