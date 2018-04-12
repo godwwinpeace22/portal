@@ -24,6 +24,7 @@ ul.success li, ul.info li, ul.error li{
   border:1px solid transparent;
   border-radius:4px;
   list-style:none;
+  text-align:center;
 }
 ul.success li{
   color:#3c763d;
