@@ -9,7 +9,7 @@ const expressValidator = require('express-validator');
 const passport = require('passport');
 const flash = require('connect-flash');
 const mongoose = require('mongoose');
-const mongoDB = process.env.databasee;
+const mongoDB = process.env.database;
 const MongoDBStore = require('connect-mongodb-session')(session);
 const compression = require('compression');
 mongoose.connect(mongoDB);
