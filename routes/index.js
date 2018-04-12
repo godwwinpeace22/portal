@@ -327,7 +327,7 @@ router.post('/update', restrictAccess, (req,res,next)=>{
   
 });
 router.post('/login', requireLogout,
-  passport.authenticate('local', {failureRedirect:'/', failureFlash:'authentication failed'}),
+  passport.authenticate('local', {failureRedirect:'/', failureFlash:'Incorrect username or password'}),
   function(req, res) {
     // If this function gets called, authentication was successful.
     // `req.user` contains the authenticated user.
