@@ -41,7 +41,7 @@ app.use(require('express-session')({
     secret: 'supersecretecatkeyguyfalsetrue',
     resave: false,
     saveUninitialized: false,
-    cookie:{maxAge: 2 * 24 * 60 * 60 * 1000},
+    cookie:{maxAge: 12 * 60 * 60 * 1000},
     store: new MongoDBStore({
         uri: process.env.database,
         databaseName: 'portal',
