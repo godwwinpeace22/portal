@@ -1,0 +1,67 @@
+extends layout
+block admin
+	.admin.col-sm-12(style='padding:0;')
+		.col-sm-2.menuitems
+			h3 Menus
+			ul
+				li
+					a(href="/admin") Registered Users
+				li
+					a(href="/") opit
+				li
+					a(href="/") oopf
+				li
+					a(href="/") jfkd
+		.col-sm-10.mainview
+			.filter.col-sm-12
+				select#byday(name="parish")
+					option sort by parish
+					option(value='lighthouse') lighthouse
+					option(value='firstborn') firstborn
+					option(value='goshen') goshen
+					option(value='faith-tabarnacle') faith tabarnacle
+					option friday
+					option saturday
+					option sunday
+				select#bymonth(name="area")
+					option sort by area
+					option(value='lighthouseA') lighthouseA
+					option(value='goshenA') goshenA
+					option(value='firstbornA') firstbornA
+					option april
+					option may
+					option june
+					option july
+					option august
+					option september
+					option october
+					option november
+					option december
+				select#byyear(name="zone" )
+					option sort by zone
+					option goshenz
+					option firstbornz
+					option lighthousez
+				select(name="interest")
+					option sort by interest
+					option(value='ICT') ICT
+					option(value='goshen') fishery
+			
+			.table-responsive.col-sm-12(style='padding:0px;')
+				table.table
+					thead
+						tr
+							th Name
+							th Parish
+							th Area
+							th Zone
+							th Workshop Interest
+					tbody
+						if(members)
+							each member in members
+								tr
+									td=member.name
+									td=member.parish
+									td=member.area
+									td=member.zone
+									td=member.interest

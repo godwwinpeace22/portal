@@ -15,7 +15,7 @@ block dashboard
 				input.form-control(name='name', type='text', value=user.name disabled)
 			.form-group
 				label Email
-				input.form-control(name='email', type='email', value=user.email disabled)
+				input.form-control(name='email', type='email', value=user?user.email:'' placeholder='Enter your email' required)
 			.form-group
 				label Profile photo
 				input.form-control(type="file" accept='image/*' name='imgSrc')
@@ -47,10 +47,10 @@ block dashboard
 					option(value='ressurectionA') resurrection
 					option(value='firstbornA') firstbornA
 			.form-group
-				label Interest
+				label Workshop Interest
 				select.form-control(name='interest', type='text', required)
 					option(value='' disabled selected) Select Interest
-					option(value='faith-tabarnacle') Fishery
-					option(value='goshen') ICT
+					option(value='Fishery') Fishery
+					option(value='ICT') ICT
 			.form-group
 				input.btn.btn-primary(name='register', type='submit')

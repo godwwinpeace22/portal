@@ -73,9 +73,6 @@ ul.error li{
 .home .sidebar .thumb-txt{
   width:230px;max-height:50px;background:rgb(250, 250, 249);display:inline-block;overflow: hidden;
 }
-.content>h1,.content>hr{
-  display:none;
-}
 
 .dashboard{
   background-color:ta;
@@ -127,4 +124,31 @@ ul.error li{
   border-bottom:3px solid #a94442;
   position: relative;
   bottom:0px;
+}
+
+/* admin panel */
+.admin .menuitems{
+  background:#31708f;
+  min-height: 400px;
+
+}
+.admin .menuitems ul{background:#31708f;padding: 5px;}
+.admin .menuitems li{list-style:none;padding:5px 0px;margin-bottom:5px;border-bottom:1px solid #cac7c7;}
+.admin .menuitems li a{color:#fff}
+.admin .mainview{
+  background:thistl;
+}
+.events .filter{
+  background: #eee;
+  padding:10px 10px;
+  margin-bottom:10px;
+  border-radius:3px;
+  -webkit-border-radius:3px;
+  -moz-border-radius:3px;
+  -o-border-radius:3px;
+}
+.mainview .filter select{
+  margin-right:5px;
+  padding:5px;
+  border-radius:3px;
 }

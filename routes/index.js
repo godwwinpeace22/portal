@@ -7,9 +7,12 @@ const flash = require('connect-flash');
 const LocalStrategy = require('passport-local').Strategy;
 const User = require('../models/user');
 const Member = require('../models/member');
+const Hashpin = require('../models/hashpin');
+const Unhashpin = require('../models/unhashpin');
 const multer = require('multer');
 const cloudinary = require('cloudinary');
 const cloudinaryStorage = require('multer-storage-cloudinary');
+const Random = require("random-js");
 
 cloudinary.config({
     cloud_name: process.env.cloud_name,
@@ -51,24 +54,26 @@ let requireLogout = function(req,res,next){
 
 //allow access to Master only.
 let masterLogin = function(req,res,next){
-  bcrypt.compare(process.env.masterPassword,  function(err, response) {
+  bcrypt.compare(process.env.masterPassword,req.user.password,  function(err, response) {
     if(err) throw err;
+    console.log(process.env.masterPassword)
+    console.log(req.user.password)
     console.log(response);
     // res === true || res === false
-    if(req.user.username == process.env.masterUsername && response == true){
+    if(req.user.username === process.env.masterUsername && response === true){
       next();
-    }
+    } 
     else{
       res.render('login');
     }
-  });
+  }); 
 }
 /* GET home page. */
 router.get('/', restrictAccess, function(req, res, next) {
   User.findOne({_id:req.user.id}).
   populate('memberRef').
   exec((err,user)=>{
-    console.log(user);
+    //console.log(user);
     res.render('index', {
       title: 'Welcome To Your Portal',
       user:user
@@ -104,7 +109,7 @@ router.get('/new', (req, res) => {
 router.post('/new', requireLogout, function(req,res,next){
   req.checkBody('name', 'Please provide your full name').notEmpty();
   req.checkBody('username', 'Please provide a username').notEmpty();
-  req.checkBody('email', 'Please provide a valid email address').isEmail();
+  req.checkBody('pin', 'Please provide your pin').notEmpty();
   req.checkBody('password', 'password cannot be empty').notEmpty();
   req.checkBody('password2', 'passwords do not match').equals(req.body.password);
   
@@ -112,9 +117,8 @@ router.post('/new', requireLogout, function(req,res,next){
   let user = new User({
     name: req.body.name,
     username:req.body.username,
-    email: req.body.email,
     password: req.body.password,
-    pin:'',
+    pin:req.body.pin,
     memberRef:null
   });
   
@@ -123,13 +127,10 @@ router.post('/new', requireLogout, function(req,res,next){
   
   //if there are errors in the form
   if(errors){
-    req.flash('error', errors);
     res.render('createacc',  {
-    title: 'Create Account',
-    errors: errors,
-    name:req.body.name,
-    username:req.body.username,
-    email:req.body.email
+      title: 'Create Account',
+      errors: errors,
+      user:user
     });
     return;
   }
@@ -139,36 +140,54 @@ router.post('/new', requireLogout, function(req,res,next){
     //check if ther username is already taken
     User.findOne({'username': req.body.username}, function(err, result){
     if(err){return next(err)}
-    User.count({name:req.body.name}, function(err, sameNameNo){
-      console.log('found user with the same name' + sameNameNo);
-    })
+
     //if the username is truely already in user by another user
     if(result){
       console.log('username is already taken');
-      req.flash('info', 'Sorry, username is already taken');
+      req.flash('error', 'Sorry, username is already taken');
       res.render('createacc',{
       title:'Create Account',
-      name:req.body.name,
-      username:req.body.username,
-      email:req.body.email
+      user:user
       });
     }
   
     //the username is not taken
     else{
-      bcrypt.hash(user.password, 10, function(err, hash){
-      if(err) throw err;
-      //set hashed password
-      user.password = hash;
-      user.save(function(err){
-        if(err){return next(err)}
-        console.log(user);
-        //res.redirect('/users/login');
-        req.login(user, function(err) {
-        if (err) { return next(err); }
-        return res.redirect('/register');
-        });
-      });
+      // check if the pin is correct
+      Unhashpin.findOne({_id:'5ad098cda18116140cfa5b38'},(err,thePin)=>{
+        console.log(req.body.pin.toString());
+        if(err) throw err;
+        console.log(thePin)
+        if(thePin.pin.indexOf(req.body.pin.toString()) === -1){
+          console.log(thePin.pin.indexOf(req.body.pin.toString()))
+          req.flash('error', 'Incorrect pin')
+          res.render('createacc',{
+            title:'Create Account',
+            user:user
+          });
+        }
+        else{
+          console.log(thePin.pin.indexOf(req.body.pin.toString()))
+          bcrypt.hash(user.password, 10, function(err, hash){
+            if(err) throw err;
+            //set hashed password
+            user.password = hash;
+            user.save(function(err){
+              if(err){return next(err)}
+              // delete the pin
+              let foo = thePin.pin
+              foo.splice(foo.indexOf(req.body.pin),1)
+              Unhashpin.update({_id:'5ad098cda18116140cfa5b38'},{pin:foo},(err,done)=>{ // update the pin array
+                //res.redirect('/users/login');
+                req.login(user, function(err) {
+                  if (err) { return next(err); }
+                  req.flash('success', 'Account created successfully')
+                  return res.redirect('/register');
+                });
+              })
+            });
+          })
+        }
       })
       
     } 
@@ -213,7 +232,9 @@ passport.use(new LocalStrategy(
 // POST == REGISTER NEW MEMBERS/PARTICIPANT
 router.post('/register', restrictAccess, upload.single('imgSrc'), (req,res,next)=>{
   // Run Validation
-  req.checkBody('imgSrc', 'Please provide a valid image').notEmpty();
+  //req.checkBody('imgSrc', 'Please provide a valid image').notEmpty();
+  req.checkBody('email', 'Email field cannot be empty').notEmpty();
+  req.checkBody('email', 'Please provide a vilid email address').isEmail();
   req.checkBody('parish', 'pasish cannot be empty').notEmpty();
   req.checkBody('area', 'area cannot be empty').notEmpty();
   req.checkBody('zone', 'zone cannot be empty').notEmpty();
@@ -224,10 +245,10 @@ router.post('/register', restrictAccess, upload.single('imgSrc'), (req,res,next)
     populate('memberRef').
     exec((err,user)=>{
       if(err) return handleError();
-      req.flash('error', errors);
       res.render('register', {
         title:'Registration form',
-        user:user
+        user:user,
+        errors:errors
       })
     })
   }
@@ -326,6 +347,34 @@ router.post('/update', restrictAccess, (req,res,next)=>{
   })
   
 });
+
+
+// ==== GENERATE Pin ====
+router.get('/auth/secure/gen/pin', (req,res,next)=>{
+  let hashArr = [];
+  let unhashArr = [];
+  for(i=0;i<20;i++){
+    var random = new Random(Random.engines.mt19937().autoSeed());
+    var randomPin = random.integer(100000000000, 999999999999); // generate random pin
+    var hash = bcrypt.hashSync(randomPin.toString()) // hash the pin
+    hashArr.push(hash); // push the hashpin to an array
+    unhashArr.push(randomPin) // push the unhashpin to array
+    //console.log(pinArr);
+  }
+  let hashpin = new Hashpin({
+    pin:hashArr,
+    date:new Date()
+  }).save((err,done)=>{
+    if(err) throw err;
+    let unhashpin = new Unhashpin({
+      pin:unhashArr,
+      date: new Date()
+    }).save((err,done)=>{
+      if(err) throw err;
+      res.json(`${hashArr} ${unhashArr}`)
+    })
+  })
+})
 router.post('/login', requireLogout,
   passport.authenticate('local', {failureRedirect:'/', failureFlash:'Incorrect username or password'}),
   function(req, res) {
@@ -345,5 +394,25 @@ router.get('/logout', function(req, res, next){
 	});
 });
 
-
+// *******======= ADMIN PANEL=========**********//
+router.get('/admin',restrictAccess,  (req, res,next) => {
+  if(req.query.length == {}){
+    console.log('no query')
+    Member.find({}).populate('UserRef').exec((err,members)=>{
+      console.log(members);
+      res.render('admin', {title:'Admin Panel',members:members});
+    })
+  }
+  else{console.log(req.query)
+    let sortby = req.query.sortby;
+    let sortval = req.query.sortval;
+    Member.find({[sortby]:sortval}).populate('UserRef').exec((err,members)=>{
+      console.log(members);
+      res.render('admin', {title:'Admin Panel',members:members});
+    })
+  
+  
+  }
+  
+});
 module.exports = router;

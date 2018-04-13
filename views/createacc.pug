@@ -6,19 +6,19 @@ block content
 			ul
 			li!= msg
 		if errors
-			ul
-			for error in errors
-				li!= error.msg
-		form(method='POST', action='')
+			ul.error
+				for error in errors
+					li!= error.msg
+		form(method='POST', action='' autocomplete="you")
 			.form-group
 				label Name
-				input.form-control(name='name', type='text', placeholder='Enter name', required)
+				input.form-control(name='name', type='text',value=user? user.name :''  placeholder='Enter name', required )
 			.form-group
-				label Username
-				input.form-control(name='username', type='text', placeholder='Enter username', required)
+				label Username or Phone
+				input.form-control(name='username', type='text', value=user? user.username :'' placeholder='Enter username', required)
 			.form-group
-				label Email
-				input.form-control(name='email', type='email', placeholder='Enter email', required)
+				label Pin
+				input.form-control(name='pin', type='text', placeholder='Enter pin', required)
 			.form-group
 				label Password
 				input.form-control(name='password', type='password', placeholder='Enter password', required)

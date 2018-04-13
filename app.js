@@ -9,7 +9,7 @@ const expressValidator = require('express-validator');
 const passport = require('passport');
 const flash = require('connect-flash');
 const mongoose = require('mongoose');
-const mongoDB = process.env.database;
+const mongoDB = 'mongodb://127.0.0.1/portal'//process.env.database;
 const MongoDBStore = require('connect-mongodb-session')(session);
 const compression = require('compression');
 mongoose.connect(mongoDB);
@@ -41,9 +41,9 @@ app.use(require('express-session')({
     secret: 'supersecretecatkeyguyfalsetrue',
     resave: false,
     saveUninitialized: false,
-    cookie:{maxAge: 12 * 60 * 60 * 1000},
+    cookie:{maxAge: 60 * 60 * 1000},
     store: new MongoDBStore({
-        uri: process.env.database,
+        uri: mongoDB,
         databaseName: 'portal',
         collection: 'sessions'
       })
@@ -76,5 +76,7 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+// nodemon --exec "heroku local" --signal SIGTERM
 
 module.exports = app;
